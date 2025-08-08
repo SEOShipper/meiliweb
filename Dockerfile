@@ -9,12 +9,14 @@ COPY package*.json pnpm-* ./
 RUN yarn global add pnpm
 
 COPY . .
-RUN pnpm install
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install
 
-WORKDIR /app/app # Correct working directory for the Nuxt build
+WORKDIR /app/app 
 
 RUN pnpm build
 
+WORKDIR /app
+
 EXPOSE 3000
 
-CMD ["node", "./output/server/index.mjs"]
+CMD ["node", "./.output/server/index.mjs"]
